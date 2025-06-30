@@ -1,0 +1,29 @@
+[
+  {
+    "Id": 1,
+    "name": "Green Valley Farm",
+    "location": "Riverside County, CA",
+    "size": 250,
+    "unit": "acres",
+    "createdAt": "2024-01-15T08:00:00.000Z",
+    "activeCrops": 5
+  },
+  {
+    "Id": 2,
+    "name": "Sunrise Agricultural Center",
+    "location": "Fresno County, CA",
+    "size": 180,
+    "unit": "acres",
+    "createdAt": "2024-02-03T10:30:00.000Z",
+    "activeCrops": 3
+  },
+  {
+    "Id": 3,
+    "name": "Heritage Organic Farm",
+    "location": "Sonoma County, CA",
+    "size": 95,
+    "unit": "acres",
+    "createdAt": "2024-03-12T14:15:00.000Z",
+    "activeCrops": 4
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "Id": 1,
+    "farmId": 1,
+    "name": "Sweet Corn",
+    "field": "North Field A",
+    "plantingDate": "2024-04-15T00:00:00.000Z",
+    "expectedHarvest": "2024-08-15T00:00:00.000Z",
+    "status": "growing"
+  },
+  {
+    "Id": 2,
+    "farmId": 1,
+    "name": "Tomatoes",
+    "field": "Greenhouse 1",
+    "plantingDate": "2024-03-20T00:00:00.000Z",
+    "expectedHarvest": "2024-07-20T00:00:00.000Z",
+    "status": "ready"
+  },
+  {
+    "Id": 3,
+    "farmId": 2,
+    "name": "Wheat",
+    "field": "East Field",
+    "plantingDate": "2024-02-10T00:00:00.000Z",
+    "expectedHarvest": "2024-07-10T00:00:00.000Z",
+    "status": "growing"
+  },
+  {
+    "Id": 4,
+    "farmId": 3,
+    "name": "Organic Lettuce",
+    "field": "Plot B-1",
+    "plantingDate": "2024-05-01T00:00:00.000Z",
+    "expectedHarvest": "2024-07-01T00:00:00.000Z",
+    "status": "growing"
+  },
+  {
+    "Id": 5,
+    "farmId": 1,
+    "name": "Bell Peppers",
+    "field": "South Field",
+    "plantingDate": "2024-01-25T00:00:00.000Z",
+    "expectedHarvest": "2024-06-25T00:00:00.000Z",
+    "status": "harvested"
+  }
+]

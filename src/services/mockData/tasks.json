@@ -1,0 +1,56 @@
+[
+  {
+    "Id": 1,
+    "farmId": 1,
+    "cropId": 1,
+    "title": "Water corn field",
+    "type": "watering",
+    "dueDate": "2024-07-20T09:00:00.000Z",
+    "completed": false
+  },
+  {
+    "Id": 2,
+    "farmId": 1,
+    "cropId": 2,
+    "title": "Harvest tomatoes",
+    "type": "harvesting",
+    "dueDate": "2024-07-18T07:00:00.000Z",
+    "completed": false
+  },
+  {
+    "Id": 3,
+    "farmId": 2,
+    "cropId": 3,
+    "title": "Apply fertilizer to wheat",
+    "type": "fertilizing",
+    "dueDate": "2024-07-15T08:00:00.000Z",
+    "completed": true
+  },
+  {
+    "Id": 4,
+    "farmId": 3,
+    "cropId": 4,
+    "title": "Weed lettuce plots",
+    "type": "weeding",
+    "dueDate": "2024-07-22T10:00:00.000Z",
+    "completed": false
+  },
+  {
+    "Id": 5,
+    "farmId": 1,
+    "cropId": null,
+    "title": "Maintenance on irrigation system",
+    "type": "maintenance",
+    "dueDate": "2024-07-25T14:00:00.000Z",
+    "completed": false
+  },
+  {
+    "Id": 6,
+    "farmId": 2,
+    "cropId": null,
+    "title": "Inspect equipment",
+    "type": "maintenance",
+    "dueDate": "2024-07-12T11:00:00.000Z",
+    "completed": true
+  }
+]

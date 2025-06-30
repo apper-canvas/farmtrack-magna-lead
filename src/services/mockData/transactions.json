@@ -1,0 +1,74 @@
+[
+  {
+    "Id": 1,
+    "farmId": 1,
+    "type": "income",
+    "category": "crop-sales",
+    "amount": 8500,
+    "date": "2024-06-15T00:00:00.000Z",
+    "description": "Sweet corn harvest sale"
+  },
+  {
+    "Id": 2,
+    "farmId": 1,
+    "type": "expense",
+    "category": "seeds",
+    "amount": 1200,
+    "date": "2024-04-10T00:00:00.000Z",
+    "description": "Corn seeds for spring planting"
+  },
+  {
+    "Id": 3,
+    "farmId": 2,
+    "type": "expense",
+    "category": "fertilizer",
+    "amount": 2800,
+    "date": "2024-07-05T00:00:00.000Z",
+    "description": "Organic fertilizer for wheat"
+  },
+  {
+    "Id": 4,
+    "farmId": 3,
+    "type": "income",
+    "category": "crop-sales",
+    "amount": 3200,
+    "date": "2024-06-20T00:00:00.000Z",
+    "description": "Organic lettuce to local market"
+  },
+  {
+    "Id": 5,
+    "farmId": 1,
+    "type": "expense",
+    "category": "equipment",
+    "amount": 15000,
+    "date": "2024-05-01T00:00:00.000Z",
+    "description": "New irrigation equipment"
+  },
+  {
+    "Id": 6,
+    "farmId": 2,
+    "type": "expense",
+    "category": "fuel",
+    "amount": 450,
+    "date": "2024-07-10T00:00:00.000Z",
+    "description": "Diesel fuel for tractors"
+  },
+  {
+    "Id": 7,
+    "farmId": 3,
+    "type": "expense",
+    "category": "labor",
+    "amount": 2400,
+    "date": "2024-06-25T00:00:00.000Z",
+    "description": "Seasonal workers for harvest"
+  },
+  {
+    "Id": 8,
+    "farmId": 1,
+    "type": "income",
+    "category": "subsidies",
+    "amount": 5000,
+    "date": "2024-07-01T00:00:00.000Z",
+    "description": "USDA organic farming subsidy"
+  }
+]
