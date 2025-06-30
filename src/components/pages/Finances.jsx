@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { toast } from 'react-toastify'
-import TransactionList from '@/components/organisms/TransactionList'
-import StatCard from '@/components/molecules/StatCard'
-import Button from '@/components/atoms/Button'
-import Input from '@/components/atoms/Input'
-import Select from '@/components/atoms/Select'
-import SearchBar from '@/components/molecules/SearchBar'
-import FilterTabs from '@/components/molecules/FilterTabs'
-import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
-import Empty from '@/components/ui/Empty'
-import ApperIcon from '@/components/ApperIcon'
-import transactionService from '@/services/api/transactionService'
-import farmService from '@/services/api/farmService'
-
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import Chart from "react-apexcharts";
+import ApperIcon from "@/components/ApperIcon";
+import TransactionList from "@/components/organisms/TransactionList";
+import Select from "@/components/atoms/Select";
+import Input from "@/components/atoms/Input";
+import Button from "@/components/atoms/Button";
+import FilterTabs from "@/components/molecules/FilterTabs";
+import SearchBar from "@/components/molecules/SearchBar";
+import StatCard from "@/components/molecules/StatCard";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
+import transactionService from "@/services/api/transactionService";
+import farmService from "@/services/api/farmService";
 const Finances = () => {
   const [transactions, setTransactions] = useState([])
   const [farms, setFarms] = useState([])
@@ -176,12 +176,19 @@ const Finances = () => {
   if (loading) return <Loading type="card" count={5} />
   if (error) return <Error message={error} onRetry={loadData} />
 
-  const getCurrentCategories = () => {
+const getCurrentCategories = () => {
     return formData.type === 'income' ? incomeCategories : expenseCategories
   }
 
+  const [reportsData, setReportsData] = useState({
+    monthlyData: [],
+    yearlyData: [],
+    categoryBreakdown: [],
+    loading: false
+  })
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -403,9 +410,348 @@ const Finances = () => {
             </div>
           </div>
         </div>
+</div>
+      )}
+
+      {/* Financial Reports Section */}
+      {transactions.length > 0 && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-primary-900 font-display">Financial Reports</h2>
+            <div className="flex items-center space-x-2">
+              <ApperIcon name="BarChart3" className="w-5 h-5 text-primary-600" />
+              <span className="text-sm text-primary-600">Data Visualization</span>
+            </div>
+          </div>
+
+          {/* Chart Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            {/* Monthly Income vs Expenses Chart */}
+            <div className="card p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-primary-900 font-display">
+                  Monthly Overview ({new Date().getFullYear()})
+                </h3>
+                <ApperIcon name="TrendingUp" className="w-5 h-5 text-primary-600" />
+              </div>
+              
+              <Chart
+                options={{
+                  chart: {
+                    type: 'bar',
+                    toolbar: { show: false },
+                    fontFamily: 'Inter, sans-serif'
+                  },
+                  colors: ['#10B981', '#EF4444'],
+                  plotOptions: {
+                    bar: {
+                      horizontal: false,
+                      columnWidth: '60%',
+                      borderRadius: 4
+                    }
+                  },
+                  dataLabels: { enabled: false },
+                  stroke: { show: false },
+                  xaxis: {
+                    categories: Array.from({length: 12}, (_, i) => 
+                      new Date(2024, i, 1).toLocaleDateString('en-US', { month: 'short' })
+                    ),
+                    labels: {
+                      style: { colors: '#6B7280', fontSize: '12px' }
+                    }
+                  },
+                  yaxis: {
+                    labels: {
+                      style: { colors: '#6B7280', fontSize: '12px' },
+                      formatter: (value) => `$${value.toLocaleString()}`
+                    }
+                  },
+                  legend: {
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    labels: { colors: '#374151' }
+                  },
+                  grid: {
+                    borderColor: '#F3F4F6',
+                    strokeDashArray: 3
+                  },
+                  tooltip: {
+                    y: {
+                      formatter: (value) => `$${value.toLocaleString()}`
+                    }
+                  }
+                }}
+                series={[
+                  {
+                    name: 'Income',
+                    data: Array.from({length: 12}, (_, month) => {
+                      return transactions
+                        .filter(t => t.type === 'income' && 
+                          new Date(t.date).getMonth() === month &&
+                          new Date(t.date).getFullYear() === new Date().getFullYear())
+                        .reduce((sum, t) => sum + t.amount, 0)
+                    })
+                  },
+                  {
+                    name: 'Expenses',
+                    data: Array.from({length: 12}, (_, month) => {
+                      return transactions
+                        .filter(t => t.type === 'expense' && 
+                          new Date(t.date).getMonth() === month &&
+                          new Date(t.date).getFullYear() === new Date().getFullYear())
+                        .reduce((sum, t) => sum + t.amount, 0)
+                    })
+                  }
+                ]}
+                type="bar"
+                height={300}
+              />
+            </div>
+
+            {/* Profit/Loss Trend Chart */}
+            <div className="card p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-primary-900 font-display">
+                  Profit/Loss Trend
+                </h3>
+                <ApperIcon name="LineChart" className="w-5 h-5 text-primary-600" />
+              </div>
+              
+              <Chart
+                options={{
+                  chart: {
+                    type: 'line',
+                    toolbar: { show: false },
+                    fontFamily: 'Inter, sans-serif'
+                  },
+                  colors: ['#8B5CF6'],
+                  stroke: {
+                    curve: 'smooth',
+                    width: 3
+                  },
+                  markers: {
+                    size: 5,
+                    colors: ['#8B5CF6'],
+                    strokeColors: '#fff',
+                    strokeWidth: 2
+                  },
+                  xaxis: {
+                    categories: Array.from({length: 12}, (_, i) => 
+                      new Date(2024, i, 1).toLocaleDateString('en-US', { month: 'short' })
+                    ),
+                    labels: {
+                      style: { colors: '#6B7280', fontSize: '12px' }
+                    }
+                  },
+                  yaxis: {
+                    labels: {
+                      style: { colors: '#6B7280', fontSize: '12px' },
+                      formatter: (value) => `$${value.toLocaleString()}`
+                    }
+                  },
+                  grid: {
+                    borderColor: '#F3F4F6',
+                    strokeDashArray: 3
+                  },
+                  tooltip: {
+                    y: {
+                      formatter: (value) => `$${value.toLocaleString()}`
+                    }
+                  },
+                  fill: {
+                    type: 'gradient',
+                    gradient: {
+                      shadeIntensity: 1,
+                      opacityFrom: 0.3,
+                      opacityTo: 0.1,
+                      stops: [0, 100]
+                    }
+                  }
+                }}
+                series={[
+                  {
+                    name: 'Net Profit',
+                    data: Array.from({length: 12}, (_, month) => {
+                      const monthlyIncome = transactions
+                        .filter(t => t.type === 'income' && 
+                          new Date(t.date).getMonth() === month &&
+                          new Date(t.date).getFullYear() === new Date().getFullYear())
+                        .reduce((sum, t) => sum + t.amount, 0)
+                      
+                      const monthlyExpenses = transactions
+                        .filter(t => t.type === 'expense' && 
+                          new Date(t.date).getMonth() === month &&
+                          new Date(t.date).getFullYear() === new Date().getFullYear())
+                        .reduce((sum, t) => sum + t.amount, 0)
+                      
+                      return monthlyIncome - monthlyExpenses
+                    })
+                  }
+                ]}
+                type="area"
+                height={300}
+              />
+            </div>
+
+            {/* Expense Categories Breakdown */}
+            <div className="card p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-primary-900 font-display">
+                  Expense Categories
+                </h3>
+                <ApperIcon name="PieChart" className="w-5 h-5 text-primary-600" />
+              </div>
+              
+              <Chart
+                options={{
+                  chart: {
+                    type: 'donut',
+                    fontFamily: 'Inter, sans-serif'
+                  },
+                  colors: ['#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'],
+                  labels: [...new Set(transactions.filter(t => t.type === 'expense').map(t => 
+                    t.category.split('-').map(word => 
+                      word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ')
+                  ))],
+                  legend: {
+                    position: 'bottom',
+                    labels: { colors: '#374151' }
+                  },
+                  plotOptions: {
+                    pie: {
+                      donut: {
+                        size: '70%'
+                      }
+                    }
+                  },
+                  dataLabels: {
+                    enabled: true,
+                    formatter: (val) => `${val.toFixed(1)}%`
+                  },
+                  tooltip: {
+                    y: {
+                      formatter: (value) => `$${value.toLocaleString()}`
+                    }
+                  }
+                }}
+                series={(() => {
+                  const categoryTotals = {}
+                  transactions.filter(t => t.type === 'expense').forEach(t => {
+                    const category = t.category.split('-').map(word => 
+                      word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ')
+                    categoryTotals[category] = (categoryTotals[category] || 0) + t.amount
+                  })
+                  return Object.values(categoryTotals)
+                })()}
+                type="donut"
+                height={300}
+              />
+            </div>
+
+            {/* Income Categories Breakdown */}
+            <div className="card p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-primary-900 font-display">
+                  Income Sources
+                </h3>
+                <ApperIcon name="DollarSign" className="w-5 h-5 text-primary-600" />
+              </div>
+              
+              <Chart
+                options={{
+                  chart: {
+                    type: 'donut',
+                    fontFamily: 'Inter, sans-serif'
+                  },
+                  colors: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'],
+                  labels: [...new Set(transactions.filter(t => t.type === 'income').map(t => 
+                    t.category.split('-').map(word => 
+                      word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ')
+                  ))],
+                  legend: {
+                    position: 'bottom',
+                    labels: { colors: '#374151' }
+                  },
+                  plotOptions: {
+                    pie: {
+                      donut: {
+                        size: '70%'
+                      }
+                    }
+                  },
+                  dataLabels: {
+                    enabled: true,
+                    formatter: (val) => `${val.toFixed(1)}%`
+                  },
+                  tooltip: {
+                    y: {
+                      formatter: (value) => `$${value.toLocaleString()}`
+                    }
+                  }
+                }}
+                series={(() => {
+                  const categoryTotals = {}
+                  transactions.filter(t => t.type === 'income').forEach(t => {
+                    const category = t.category.split('-').map(word => 
+                      word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ')
+                    categoryTotals[category] = (categoryTotals[category] || 0) + t.amount
+                  })
+                  return Object.values(categoryTotals)
+                })()}
+                type="donut"
+                height={300}
+              />
+            </div>
+          </div>
+
+          {/* Financial Insights */}
+          <div className="card p-6">
+            <div className="flex items-center mb-6">
+              <ApperIcon name="TrendingUp" className="w-5 h-5 text-primary-600 mr-2" />
+              <h3 className="text-lg font-semibold text-primary-900 font-display">
+                Financial Insights
+              </h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="text-center p-4 bg-primary-50 rounded-lg">
+                <div className="text-2xl font-bold text-primary-900 font-display">
+                  {((totalIncome / (totalIncome + totalExpenses)) * 100).toFixed(1)}%
+                </div>
+                <div className="text-sm text-primary-600">Income Ratio</div>
+              </div>
+              
+              <div className="text-center p-4 bg-success/10 rounded-lg">
+                <div className="text-2xl font-bold text-success font-display">
+                  ${(totalIncome / transactions.filter(t => t.type === 'income').length || 0).toLocaleString()}
+                </div>
+                <div className="text-sm text-primary-600">Avg Income/Transaction</div>
+              </div>
+              
+              <div className="text-center p-4 bg-error/10 rounded-lg">
+                <div className="text-2xl font-bold text-error font-display">
+                  ${(totalExpenses / transactions.filter(t => t.type === 'expense').length || 0).toLocaleString()}
+                </div>
+                <div className="text-sm text-primary-600">Avg Expense/Transaction</div>
+              </div>
+              
+              <div className="text-center p-4 bg-warning/10 rounded-lg">
+                <div className={`text-2xl font-bold font-display ${
+                  netProfit >= 0 ? 'text-success' : 'text-error'
+                }`}>
+                  {netProfit >= 0 ? '+' : ''}${netProfit.toLocaleString()}
+                </div>
+                <div className="text-sm text-primary-600">Total Profit/Loss</div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
-}
 
 export default Finances
