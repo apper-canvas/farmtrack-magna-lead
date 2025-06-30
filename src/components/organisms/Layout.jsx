@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Sidebar from '@/components/organisms/Sidebar'
 import Header from '@/components/organisms/Header'
 
 const Layout = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-
+  const [sidebarOpen, setSidebarOpen] = React.useState(false)
   return (
     <div className="flex h-screen bg-background">
       {/* Sidebar */}
