@@ -4,7 +4,7 @@ import ApperIcon from '@/components/ApperIcon'
 import StatusBadge from '@/components/molecules/StatusBadge'
 import Button from '@/components/atoms/Button'
 
-const CropTable = ({ crops, farms, onEdit, onDelete }) => {
+const CropTable = ({ crops, farms, onEdit, onDelete, onViewDetails }) => {
   const getFarmName = (farmId) => {
     const farm = farms.find(f => f.Id === farmId)
     return farm ? farm.name : 'Unknown Farm'
@@ -84,13 +84,21 @@ const CropTable = ({ crops, farms, onEdit, onDelete }) => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <StatusBadge status={crop.status} type="crop" />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+<td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        icon="Eye"
+                        onClick={() => onViewDetails(crop)}
+                        title="View Details"
+                      />
                       <Button
                         variant="ghost"
                         size="sm"
                         icon="Edit"
                         onClick={() => onEdit(crop)}
+                        title="Edit Crop"
                       />
                       <Button
                         variant="ghost"
@@ -98,6 +106,7 @@ const CropTable = ({ crops, farms, onEdit, onDelete }) => {
                         icon="Trash2"
                         onClick={() => onDelete(crop.Id)}
                         className="text-error hover:bg-red-50"
+                        title="Delete Crop"
                       />
                     </div>
                   </td>

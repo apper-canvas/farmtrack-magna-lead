@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { toast } from 'react-toastify'
 import CropTable from '@/components/organisms/CropTable'
+import CropDetailModal from '@/components/organisms/CropDetailModal'
 import Button from '@/components/atoms/Button'
 import Input from '@/components/atoms/Input'
 import Select from '@/components/atoms/Select'
@@ -23,6 +24,8 @@ const Crops = () => {
   const [statusFilter, setStatusFilter] = useState('all')
   const [showForm, setShowForm] = useState(false)
   const [editingCrop, setEditingCrop] = useState(null)
+  const [showDetailModal, setShowDetailModal] = useState(false)
+  const [selectedCrop, setSelectedCrop] = useState(null)
   const [formData, setFormData] = useState({
     farmId: '',
     name: '',
@@ -123,6 +126,11 @@ const Crops = () => {
     })
     setEditingCrop(null)
     setShowForm(false)
+}
+
+  const handleViewDetails = (crop) => {
+    setSelectedCrop(crop)
+    setShowDetailModal(true)
   }
 
   const filteredCrops = crops.filter(crop => {
@@ -292,16 +300,28 @@ const Crops = () => {
           }
           actionLabel={farms.length === 0 ? null : "Add First Crop"}
           onAction={farms.length === 0 ? null : () => setShowForm(true)}
-        />
+/>
       ) : (
         <CropTable
           crops={filteredCrops}
           farms={farms}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onViewDetails={handleViewDetails}
         />
       )}
 
+      {/* Crop Detail Modal */}
+      {showDetailModal && selectedCrop && (
+        <CropDetailModal
+          crop={selectedCrop}
+          farm={farms.find(f => f.Id === selectedCrop.farmId)}
+          onClose={() => {
+            setShowDetailModal(false)
+            setSelectedCrop(null)
+          }}
+        />
+      )}
       {/* Summary Stats */}
       {crops.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
