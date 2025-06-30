@@ -24,13 +24,20 @@ const Finances = () => {
   const [typeFilter, setTypeFilter] = useState('all')
   const [showForm, setShowForm] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState(null)
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     farmId: '',
     type: 'expense',
     category: '',
     amount: '',
     date: new Date().toISOString().split('T')[0],
     description: ''
+  })
+
+  const [reportsData, setReportsData] = useState({
+    monthlyData: [],
+    yearlyData: [],
+    categoryBreakdown: [],
+    loading: false
   })
 
   const typeFilterTabs = [
@@ -180,14 +187,7 @@ if (loading) return <Loading type="card" count={5} />
     return formData.type === 'income' ? incomeCategories : expenseCategories
   }
 
-  const [reportsData, setReportsData] = useState({
-    monthlyData: [],
-    yearlyData: [],
-    categoryBreakdown: [],
-    loading: false
-  })
-
-  return (
+return (
     <>
     <div className="space-y-8 p-6">
       {/* Header */}
