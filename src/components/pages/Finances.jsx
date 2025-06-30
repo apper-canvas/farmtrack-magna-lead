@@ -173,10 +173,10 @@ const Finances = () => {
       new Date(t.date).getFullYear() === currentYear)
     .reduce((sum, t) => sum + t.amount, 0)
 
-  if (loading) return <Loading type="card" count={5} />
+if (loading) return <Loading type="card" count={5} />
   if (error) return <Error message={error} onRetry={loadData} />
 
-const getCurrentCategories = () => {
+  const getCurrentCategories = () => {
     return formData.type === 'income' ? incomeCategories : expenseCategories
   }
 
@@ -188,6 +188,7 @@ const getCurrentCategories = () => {
   })
 
   return (
+    <>
     <div className="space-y-8 p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -406,11 +407,10 @@ const getCurrentCategories = () => {
               }`}>
                 ${(monthlyIncome - monthlyExpenses).toLocaleString()}
               </div>
-              <div className="text-sm text-primary-600">Monthly Net</div>
+<div className="text-sm text-primary-600">Monthly Net</div>
             </div>
           </div>
         </div>
-</div>
       )}
 
       {/* Financial Reports Section */}
@@ -751,7 +751,9 @@ const getCurrentCategories = () => {
           </div>
         </div>
       )}
-    </div>
+</div>
+    </>
   )
+}
 
 export default Finances
